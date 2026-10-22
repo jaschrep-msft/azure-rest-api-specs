@@ -205,6 +205,8 @@ interface PageBlobClient extends Storage.Blob.PageBlob {}
 
 @@clientName(Storage.Blob.BlockBlob.upload, "upload_internal", "rust");
 @@access(Storage.Blob.BlockBlob.upload, Access.internal, "rust");
+@@clientName(Storage.Blob.BlockBlob.stageBlock, "stage_block_internal", "rust");
+@@access(Storage.Blob.BlockBlob.stageBlock, Access.internal, "rust");
 @@clientName(Storage.Blob.Blob.download, "download_internal", "rust");
 @@access(Storage.Blob.Blob.download, Access.internal, "rust");
 @@clientName(Storage.Blob.Blob.abortCopyFromUrl, "abortCopy", "rust");
@@ -1169,41 +1171,6 @@ op appendBlockNoStructuredMessage is StorageOperationRequestBody<
 >;
 
 @@override(AppendBlob.appendBlock, appendBlockNoStructuredMessage, "rust");
-
-/** The Stage Block operation creates a new block to be committed as part of a blob. */
-#suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
-#suppress "@azure-tools/typespec-azure-core/no-response-body" "Existing API"
-#suppress "@azure-tools/typespec-azure-core/use-standard-names" "Existing API"
-#suppress "@azure-tools/typespec-azure-core/byos" "Existing API"
-@put
-@sharedRoute
-@route("?comp=block")
-op stageBlockNoStructuredMessage is StorageOperationRequestBody<
-  {
-    ...BlockIdParameter;
-    ...ContentLengthParameter;
-    ...ContentMd5Parameter;
-    ...ContentCrc64Parameter;
-    ...BodyParameter;
-    ...TimeoutParameter;
-    ...LeaseIdOptionalParameter;
-    ...EncryptionKeyParameter;
-    ...EncryptionKeySha256Parameter;
-    ...EncryptionAlgorithmParameter;
-    ...EncryptionScopeParameter;
-  },
-  {
-    @statusCode statusCode: 201;
-    ...ContentMd5ResponseHeader;
-    ...ContentCrc64ResponseHeader;
-    ...RequestServerEncryptedResponseHeader;
-    ...EncryptionKeySha256ResponseHeader;
-    ...EncryptionScopeResponseHeader;
-  },
-  "application/octet-stream"
->;
-
-@@override(BlockBlob.stageBlock, stageBlockNoStructuredMessage, "rust");
 
 /** The Upload Pages operation writes a range of pages to a page blob. */
 #suppress "@azure-tools/typespec-azure-core/use-standard-operations" "Existing API"
